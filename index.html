@@ -18,7 +18,6 @@
         <figure>
             <img src="https://picsum.photos/400/300" alt="Immagine Casuale">
         </figure>
-
     </main>
     <footer>
       <p>Creato con amore da... un collega sbadato! 🐾</p>
@@ -27,13 +26,50 @@
     <script type="text/babel">
         const { useState } = React;
 
+        function Modal({
+            title, 
+            content, 
+            show = false, 
+            onClose = () => {}, 
+            onConfirm = () => {}
+        }) {
+            return show && ReactDOM.createPortal(
+                <div className="modal-container">
+                    <div className="modal">
+                        <h2>{title}</h2>
+                        <div className="modal-content">
+                            {content}
+                        </div>
+                        <div className="modal-actions">
+                            <button onClick={onClose}>Annulla</button>
+                            <button onClick={onConfirm}>Conferma</button>
+                        </div>
+                    </div>
+                </div>,
+                document.body
+            );
+        }
+
         function ListaAnimali() {
-            const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
             const [animali, setAnimali] = useState([]);
+            const [showModal, setShowModal] = useState(false);
+            const [animalName, setAnimalName] = useState('');
 
             function aggiungiAnimale() {
-                const animaleCasuale = animalsChoices[Math.floor(Math.random() * animalsChoices.length)];
-                setAnimali([...animali, animaleCasuale]);
+                setShowModal(true); 
+            }
+
+            function confermaAggiunta() {
+                if (animalName) {
+                    setAnimali([...animali, animalName]);
+                }
+                setShowModal(false);
+                setAnimalName(''); 
+            }
+
+            function annullaAggiunta() {
+                setShowModal(false);
+                setAnimalName('');
             }
 
             return (
@@ -47,6 +83,24 @@
                             ))}
                         </ul>    
                     </details>
+                    <Modal 
+                        title="Aggiungi un Animale"
+                        show={showModal}
+                        onClose={annullaAggiunta}
+                        onConfirm={confermaAggiunta}
+                        content={
+                            <div>
+                                <label htmlFor="animaleInput">Nome dell'animale:</label>
+                                <input
+                                    id="animaleInput"
+                                    type="text"
+                                    value={animalName}
+                                    onChange={(e) => setAnimalName(e.target.value)}
+                                    placeholder="Inserisci il nome dell'animale"
+                                />
+                            </div>
+                        }
+                    />
                 </>
             );
         }
