@@ -1,8 +1,7 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-    <script src="https://unpkg.com/react@18/umd/react.development.js" ></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <meta charset="UTF-8">
@@ -19,29 +18,42 @@
         <figure>
             <img src="https://picsum.photos/400/300" alt="Immagine Casuale">
         </figure>
+
     </main>
-      <footer>
+    <footer>
       <p>Creato con amore da... un collega sbadato! 🐾</p>
     </footer>
 
     <script type="text/babel">
-        function ListaAnimali(){
-            const animali = ['Tigre','Leone','Cane','Gatto']
+        const { useState } = React;
+
+        function ListaAnimali() {
+            const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
+            const [animali, setAnimali] = useState([]);
+
+            function aggiungiAnimale() {
+                const animaleCasuale = animalsChoices[Math.floor(Math.random() * animalsChoices.length)];
+                setAnimali([...animali, animaleCasuale]);
+            }
 
             return (
-                <details>
-                    <summary>Animali</summary>
-                    <ul>
-                        { animali.map((animale,index) => (
-                            <li key={index}>{animale}</li>
-                        ))}
-                    </ul>    
-                </details>
-            )
+                <>
+                    <button onClick={aggiungiAnimale} className='button'>Aggiungi Animale</button>
+                    <details>
+                        <summary>Animali</summary>
+                        <ul>
+                            {animali.map((animale, index) => (
+                                <li key={index}>{animale}</li>
+                            ))}
+                        </ul>    
+                    </details>
+                </>
+            );
         }
+
         const container = document.querySelector(".lista-animali");
         const root = ReactDOM.createRoot(container);
         root.render(<ListaAnimali />);
     </script>
-  </body>
+</body>
 </html>
